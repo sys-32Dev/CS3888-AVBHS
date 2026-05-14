@@ -1,0 +1,564 @@
+\documentclass[12pt]{article}
+
+% Packages
+\usepackage[margin=1in]{geometry}
+\usepackage{titlesec}
+\usepackage{titletoc}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{parskip}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{setspace}
+\usepackage[hidelinks]{hyperref}
+
+\setstretch{1.15}
+
+% Header / Footer
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{CS3338 -- Group 07}
+\lhead{Software Requirements Specification}
+\rfoot{Page \thepage}
+\lfoot{Automated Vertical Basketball Highlight System}
+
+% Section formatting
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
+\titleformat{\subsection}{\normalsize\bfseries}{}{0em}{}
+
+% ─────────────────────────────────────────────
+\begin{document}
+
+% ══════════════════════════════════════════════
+%  COVER PAGE
+% ══════════════════════════════════════════════
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+
+    {\LARGE\bfseries Software Requirements Specification\\[0.5em]}
+    {\Large Automated Vertical Basketball Highlight System\\[2em]}
+
+    \rule{\linewidth}{0.5pt}\\[1em]
+
+    {\large CS3338 -- Software Engineering\\
+    California State University, Los Angeles\\[1em]}
+
+    {\large Group 07\\[2em]}
+    {\normalsize Christopher Ayala, Edwin Hui, Kazuho Igarashi, Nestor Adame Delgado, Ovi Ahmed\\[2em]}
+
+    \begin{tabular}{ll}
+        \textbf{Version:}  & 1.0                   \\
+        \textbf{Date:}     & \today                \\
+        \textbf{Status:}   & Snapshot 1 -- Initial Draft \\
+    \end{tabular}
+
+    \vfill
+    {\small Jira Project: \href{https://cs3338-group-07.atlassian.net}{https://cs3338-group-07.atlassian.net}}
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\newpage
+
+% ══════════════════════════════════════════════
+% VERSION HISTORY
+% ══════════════════════════════════════════════
+\section*{Version History}
+\addcontentsline{toc}{section}{Version History}
+
+\begin{longtable}{|p{1in}|p{1.5in}|p{3.5in}|}
+\hline
+\textbf{Version} & \textbf{Date} & \textbf{Description} \\
+\hline
+1.0 & \today & Initial SRS draft for Snapshot 1. Defines system purpose, functional requirements, non-functional requirements, interfaces, and ethical considerations. \\
+\hline
+\end{longtable}
+
+\newpage
+
+% ══════════════════════════════════════════════
+% SECTION 1 -- INTRODUCTION
+% ══════════════════════════════════════════════
+\section{Introduction}
+
+\subsection{Purpose}
+The purpose of this Software Requirements Specification (SRS) is to define the functional, non-functional, interface, data, and ethical requirements for the Basketball Highlight Detection and Auto-Cropping System. The system is designed to help users upload basketball game footage and automatically generate cropped highlight clips focused on important gameplay moments.
+
+This document will serve as the primary requirements reference throughout the project snapshots. It will be revised as the project evolves and new features, dependencies, tests, and design decisions are added.
+
+\subsection{Intended Audience}
+The intended audience for this document includes:
+\begin{itemize}[noitemsep]
+    \item The project development team.
+    \item The course professor and evaluators.
+    \item Testers responsible for creating and executing TestRail test cases.
+    \item Future developers who may continue or maintain the project.
+    \item Stakeholders interested in the purpose, scope, and limitations of the system.
+\end{itemize}
+
+\subsection{Project Scope}
+The system will provide a web-based interface that allows users to upload basketball video footage. Once uploaded, the system will process the video using computer vision techniques to detect relevant basketball activity, identify candidate highlight segments, crop or format the output video, and allow the user to download the generated clips.
+
+The project is planned as a simulated software development lifecycle over multiple snapshots. Each snapshot adds additional planning, documentation, testing, and system design refinement.
+
+\subsection{Definitions, Acronyms, and Abbreviations}
+\begin{longtable}{|p{1.5in}|p{4.5in}|}
+\hline
+\textbf{Term} & \textbf{Definition} \\
+\hline
+SRS & Software Requirements Specification. A document describing what the software must do. \\
+\hline
+SDD & Software Design Document. A document describing how the software will be designed and structured. \\
+\hline
+UI & User Interface. The visual and interactive part of the system used by the user. \\
+\hline
+UX & User Experience. The overall experience of interacting with the system. \\
+\hline
+YOLO & You Only Look Once. A real-time object detection model family used for detecting objects in images or video. \\
+\hline
+FFmpeg & A multimedia framework used to process, crop, convert, and export video files. \\
+\hline
+Docker & A containerization platform used to define and run the application services in a consistent environment. \\
+\hline
+Jira & A project management tool used to create tasks, sprints, and project objectives. \\
+\hline
+TestRail & A test management tool used to define, execute, and report test cases. \\
+\hline
+Snapshot & A project checkpoint representing a stage of development and documentation updates. \\
+\hline
+\end{longtable}
+
+\newpage
+
+% ══════════════════════════════════════════════
+% SECTION 2 -- OVERALL DESCRIPTION
+% ══════════════════════════════════════════════
+\section{Overall Description}
+
+\subsection{Product Perspective}
+The Basketball Highlight Detection and Auto-Cropping System is a web-based software tool that combines video upload functionality, object detection, highlight scoring, cropping, and clip export. The system is intended to demonstrate how a software project can be planned, designed, tested, and documented using GitHub, Jira, Docker, TestRail, and LaTeX.
+
+The system is not intended to replace professional sports editing software. Instead, it provides a simplified prototype design for automatically generating basketball highlight clips from uploaded footage.
+
+\subsection{Product Functions}
+The major system functions include:
+\begin{itemize}[noitemsep]
+    \item Allowing users to upload basketball video files through a web interface.
+    \item Validating uploaded files before processing.
+    \item Processing video frames using a computer vision detection model.
+    \item Identifying candidate highlight segments based on object detection and scoring logic.
+    \item Cropping or formatting video clips using FFmpeg.
+    \item Displaying processing status to the user.
+    \item Providing generated highlight clips for download.
+    \item Maintaining documentation, testing reports, and development tasks across project snapshots.
+\end{itemize}
+
+\subsection{User Classes and Characteristics}
+The system is designed for the following user classes:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{General User:} A user who uploads basketball videos and downloads generated clips.
+    \item \textbf{Developer:} A team member responsible for maintaining the Flask application, detection logic, Docker configuration, and documentation.
+    \item \textbf{Tester:} A team member responsible for creating and running TestRail test cases.
+    \item \textbf{Evaluator:} The professor or grader reviewing the GitHub repository, documentation, Jira board, Docker configuration, and test reports.
+\end{itemize}
+
+\subsection{Operating Environment}
+The system is expected to run in a containerized environment using Docker. The planned environment includes:
+\begin{itemize}[noitemsep]
+    \item A Flask-based web application container.
+    \item A worker or processing service responsible for video processing.
+    \item FFmpeg installed in the appropriate container for video manipulation.
+    \item Python libraries for computer vision and application logic.
+    \item A browser-based client for user interaction.
+\end{itemize}
+
+\subsection{Design and Implementation Constraints}
+The system is subject to the following constraints:
+\begin{itemize}[noitemsep]
+    \item The project must include documentation as LaTeX \texttt{.tex} files.
+    \item The project must be stored in a GitHub repository.
+    \item The repository must include a README or user manual with a Jira link.
+    \item The project must include Docker service planning using a \texttt{docker-compose.yml} file.
+    \item TestRail reports must be included for the required snapshots.
+    \item Processing large video files may require significant CPU or GPU resources.
+    \item Detection accuracy depends on the quality of the video and the object detection model.
+\end{itemize}
+
+\subsection{Assumptions and Dependencies}
+The project assumes:
+\begin{itemize}[noitemsep]
+    \item Users will upload basketball-related video footage.
+    \item Uploaded videos will use common video formats such as MP4.
+    \item The system will have access to the required Python libraries and FFmpeg.
+    \item The object detection model will be available locally or through the project environment.
+    \item The project team will update the documents during each snapshot.
+    \item Jira and TestRail will be used to support sprint planning and testing documentation.
+\end{itemize}
+
+\newpage
+
+% ══════════════════════════════════════════════
+% SECTION 3 -- EXTERNAL INTERFACE REQUIREMENTS
+% ══════════════════════════════════════════════
+\section{External Interface Requirements}
+
+\subsection{User Interface Requirements}
+
+\subsubsection{Upload Page}
+The upload page shall allow users to select a basketball video file from their local device and submit it for processing.
+
+\begin{itemize}[noitemsep]
+    \item The page shall include a file upload field.
+    \item The page shall include a submit or process button.
+    \item The page shall display validation feedback if the uploaded file type is unsupported.
+    \item The page should provide basic instructions for the user.
+\end{itemize}
+
+\subsubsection{Processing Page}
+The processing page shall inform the user that the video is being analyzed.
+
+\begin{itemize}[noitemsep]
+    \item The page shall display a processing status message.
+    \item The page should provide progress updates when available.
+    \item The page should prevent duplicate submissions while processing is active.
+\end{itemize}
+
+\subsubsection{Result Page}
+The result page shall display the generated highlight clip or clips after processing is complete.
+
+\begin{itemize}[noitemsep]
+    \item The page shall provide a download link for the generated clip.
+    \item The page should display clip metadata such as filename or duration when available.
+    \item The page should provide a way to return to the upload page.
+\end{itemize}
+
+\subsubsection{History Page}
+If implemented in a later snapshot, the history page shall display previously processed videos and output clips from the current session.
+
+\begin{itemize}[noitemsep]
+    \item The page should list recent processed videos.
+    \item The page should include links to available output clips.
+    \item The page should only show session-specific history unless user accounts are added in future work.
+\end{itemize}
+
+\subsection{Software Interface Requirements}
+The system shall interact with the following software components:
+\begin{itemize}[noitemsep]
+    \item \textbf{Flask:} Provides routing, request handling, and HTML template rendering.
+    \item \textbf{YOLOv8 or Object Detection Model:} Detects basketball-related objects or gameplay activity in video frames.
+    \item \textbf{OpenCV:} Supports frame extraction, image processing, and video analysis.
+    \item \textbf{FFmpeg:} Handles video cropping, trimming, thumbnail generation, and export.
+    \item \textbf{Docker Compose:} Defines and runs the application services.
+    \item \textbf{Jira:} Tracks sprint tasks, bugs, objectives, and development responsibilities.
+    \item \textbf{TestRail:} Stores and reports test cases for project snapshots.
+\end{itemize}
+
+\subsection{Hardware Interface Requirements}
+No specialized hardware is required for the baseline design. However, performance may improve if the system is run on hardware with:
+\begin{itemize}[noitemsep]
+    \item A modern multi-core CPU.
+    \item Sufficient RAM for video processing.
+    \item Optional GPU support for faster model inference.
+    \item Adequate storage for uploaded videos and generated clips.
+\end{itemize}
+
+\subsection{Communication Interface Requirements}
+The system shall use standard HTTP communication between the user's browser and the Flask web server.
+
+\begin{itemize}[noitemsep]
+    \item The user shall access the application through a web browser.
+    \item File uploads shall be transmitted through HTTP form submission.
+    \item AJAX polling may be used in later snapshots to update processing status.
+    \item External deployment, if added later, should use HTTPS.
+\end{itemize}
+
+\newpage
+
+% ══════════════════════════════════════════════
+% SECTION 4 -- SYSTEM FEATURES
+% ══════════════════════════════════════════════
+\section{System Features}
+
+\subsection{Feature 1: Video Upload}
+
+\subsubsection{Description}
+The system shall allow users to upload basketball video files through the web interface.
+
+\subsubsection{Functional Requirements}
+\begin{itemize}[noitemsep]
+    \item \textbf{FR-1.1:} The system shall provide a video upload form.
+    \item \textbf{FR-1.2:} The system shall accept common video file formats such as MP4.
+    \item \textbf{FR-1.3:} The system shall reject unsupported file formats.
+    \item \textbf{FR-1.4:} The system shall store uploaded files in a designated upload directory or mounted volume.
+    \item \textbf{FR-1.5:} The system shall notify the user when upload validation fails.
+\end{itemize}
+
+\subsection{Feature 2: Video Processing}
+
+\subsubsection{Description}
+The system shall process uploaded basketball footage to detect gameplay activity and identify candidate highlight segments.
+
+\subsubsection{Functional Requirements}
+\begin{itemize}[noitemsep]
+    \item \textbf{FR-2.1:} The system shall extract frames from the uploaded video.
+    \item \textbf{FR-2.2:} The system shall run object detection on selected frames.
+    \item \textbf{FR-2.3:} The system shall identify relevant objects or areas of interest in the video.
+    \item \textbf{FR-2.4:} The system shall generate processing data that can be used for highlight selection.
+    \item \textbf{FR-2.5:} The system shall handle processing failures without crashing the entire application.
+\end{itemize}
+
+\subsection{Feature 3: Highlight Scoring}
+
+\subsubsection{Description}
+The system shall use scoring logic to determine which portions of the video are likely to contain highlight-worthy moments.
+
+\subsubsection{Functional Requirements}
+\begin{itemize}[noitemsep]
+    \item \textbf{FR-3.1:} The system shall evaluate detection confidence for processed frames.
+    \item \textbf{FR-3.2:} The system shall identify candidate highlight segments based on scoring rules.
+    \item \textbf{FR-3.3:} The system should support configurable scoring thresholds.
+    \item \textbf{FR-3.4:} The system should reduce duplicate or overlapping highlight segments.
+\end{itemize}
+
+\subsection{Feature 4: Clip Cropping and Export}
+
+\subsubsection{Description}
+The system shall generate cropped or formatted highlight clips from the uploaded video.
+
+\subsubsection{Functional Requirements}
+\begin{itemize}[noitemsep]
+    \item \textbf{FR-4.1:} The system shall use FFmpeg or equivalent video tools to create output clips.
+    \item \textbf{FR-4.2:} The system shall save generated clips to an output directory or mounted volume.
+    \item \textbf{FR-4.3:} The system shall preserve usable video quality in the exported clip.
+    \item \textbf{FR-4.4:} The system should support multiple highlight clips from one input video in a later snapshot.
+    \item \textbf{FR-4.5:} The system should support configurable crop padding to avoid cutting off important gameplay action.
+\end{itemize}
+
+\subsection{Feature 5: Results and Download}
+
+\subsubsection{Description}
+The system shall allow users to access and download generated highlight clips.
+
+\subsubsection{Functional Requirements}
+\begin{itemize}[noitemsep]
+    \item \textbf{FR-5.1:} The system shall display a result page after processing is complete.
+    \item \textbf{FR-5.2:} The system shall provide a download link for generated clips.
+    \item \textbf{FR-5.3:} The system should display clip preview information when available.
+    \item \textbf{FR-5.4:} The system should provide thumbnail previews in a later snapshot.
+\end{itemize}
+
+\subsection{Feature 6: Project Management and Testing}
+
+\subsubsection{Description}
+The project shall use Jira and TestRail to demonstrate project planning and quality assurance.
+
+\subsubsection{Functional Requirements}
+\begin{itemize}[noitemsep]
+    \item \textbf{FR-6.1:} The team shall create Jira tasks for planned sprint work.
+    \item \textbf{FR-6.2:} The team shall define possible bugs or weak areas for testing.
+    \item \textbf{FR-6.3:} The team shall create TestRail test cases for the required snapshots.
+    \item \textbf{FR-6.4:} The team shall include TestRail reports in the GitHub repository.
+\end{itemize}
+
+\newpage
+
+% ══════════════════════════════════════════════
+% SECTION 5 -- NON-FUNCTIONAL REQUIREMENTS
+% ══════════════════════════════════════════════
+\section{Non-Functional Requirements}
+
+\subsection{Performance Requirements}
+\begin{itemize}[noitemsep]
+    \item \textbf{NFR-1.1:} The system should process short basketball clips within a reasonable time for a prototype environment.
+    \item \textbf{NFR-1.2:} The system should avoid unnecessary full-frame processing when frame sampling can reduce processing time.
+    \item \textbf{NFR-1.3:} The system should provide status feedback during long-running processing tasks.
+\end{itemize}
+
+\subsection{Reliability Requirements}
+\begin{itemize}[noitemsep]
+    \item \textbf{NFR-2.1:} The system shall handle invalid uploads gracefully.
+    \item \textbf{NFR-2.2:} The system shall not terminate unexpectedly when video processing fails.
+    \item \textbf{NFR-2.3:} The system should log processing errors for debugging.
+\end{itemize}
+
+\subsection{Usability Requirements}
+\begin{itemize}[noitemsep]
+    \item \textbf{NFR-3.1:} The user interface shall be simple and understandable for non-technical users.
+    \item \textbf{NFR-3.2:} The upload and download workflow shall require minimal user steps.
+    \item \textbf{NFR-3.3:} The system should provide clear error messages when user action is required.
+\end{itemize}
+
+\subsection{Maintainability Requirements}
+\begin{itemize}[noitemsep]
+    \item \textbf{NFR-4.1:} The system shall separate major responsibilities into clear modules.
+    \item \textbf{NFR-4.2:} The codebase should be organized so future features can be added without major restructuring.
+    \item \textbf{NFR-4.3:} Dependencies shall be documented in the repository.
+    \item \textbf{NFR-4.4:} Design and requirements documents shall be updated at each snapshot.
+\end{itemize}
+
+\subsection{Portability Requirements}
+\begin{itemize}[noitemsep]
+    \item \textbf{NFR-5.1:} The system shall be designed to run through Docker Compose.
+    \item \textbf{NFR-5.2:} Required services and dependencies shall be declared in project configuration files.
+    \item \textbf{NFR-5.3:} The application should be reproducible across development environments.
+\end{itemize}
+
+\subsection{Security Requirements}
+\begin{itemize}[noitemsep]
+    \item \textbf{NFR-6.1:} The system shall validate uploaded file types.
+    \item \textbf{NFR-6.2:} The system should limit file size to reduce abuse or accidental overload.
+    \item \textbf{NFR-6.3:} The system shall not expose internal file paths unnecessarily to the user.
+    \item \textbf{NFR-6.4:} If future user accounts are added, authentication and authorization controls shall be required.
+\end{itemize}
+
+\newpage
+
+% ══════════════════════════════════════════════
+% SECTION 6 -- DATA REQUIREMENTS
+% ══════════════════════════════════════════════
+\section{Data Requirements}
+
+\subsection{Input Data}
+The primary input data is uploaded basketball video footage. The system may also use configuration data such as:
+\begin{itemize}[noitemsep]
+    \item Accepted file types.
+    \item Maximum upload size.
+    \item Detection confidence threshold.
+    \item Highlight scoring threshold.
+    \item Crop padding settings.
+\end{itemize}
+
+\subsection{Output Data}
+The primary output data includes:
+\begin{itemize}[noitemsep]
+    \item Generated highlight clips.
+    \item Optional thumbnail images.
+    \item Processing logs.
+    \item TestRail reports.
+    \item Project documentation files.
+\end{itemize}
+
+\subsection{Data Storage}
+Uploaded videos and generated clips should be stored in designated directories or Docker-mounted volumes. Temporary files should be removed when no longer needed to avoid unnecessary storage usage.
+
+\subsection{Data Retention}
+For the baseline project, the system is not intended to permanently store user data. Uploaded videos and generated clips may be retained temporarily for download and testing purposes. If persistent storage or user accounts are added in future work, a formal data retention policy should be created.
+
+\newpage
+
+% ══════════════════════════════════════════════
+% SECTION 7 -- LEGAL AND ETHICAL CONSIDERATIONS
+% ══════════════════════════════════════════════
+\section{Legal and Ethical Considerations}
+
+\subsection{User Data}
+The system may process videos that include identifiable individuals. The project should avoid collecting unnecessary personal information and should not require account creation in the baseline design.
+
+\subsection{Privacy}
+Users should only upload videos they have the right to use. If the system is deployed publicly in the future, the application should include clear privacy notices explaining how videos are processed, stored, and deleted.
+
+\subsection{Copyright}
+Basketball footage may be protected by copyright depending on the source. The system should be used only with authorized footage, personal recordings, or content that the user has permission to process.
+
+\subsection{Bias and Accuracy}
+Computer vision models may perform differently depending on lighting conditions, camera angle, video quality, player movement, and background complexity. The system should not claim perfect detection accuracy. Any output should be treated as automatically generated assistance rather than guaranteed professional editing.
+
+\subsection{Security and Misuse}
+The upload feature could be misused if file validation and size limits are not implemented. The system should validate uploaded files and avoid executing user-provided files directly.
+
+\newpage
+
+% ══════════════════════════════════════════════
+% SECTION 8 -- SNAPSHOT REQUIREMENTS
+% ══════════════════════════════════════════════
+\section{Snapshot Requirements}
+
+\subsection{Snapshot 1 -- Initial Requirements}
+The first snapshot shall define the initial project scope, architecture, tool usage, and core documentation.
+
+\begin{itemize}[noitemsep]
+    \item Define the project objective and system purpose.
+    \item Create the initial SRS and SDD documents.
+    \item Define the baseline technology stack.
+    \item Create the initial GitHub repository structure.
+    \item Create the initial Jira sprint backlog.
+    \item Define the planned Docker service structure.
+\end{itemize}
+
+\subsection{Snapshot 2 -- Checkpoint 1 Planned Requirements}
+The second snapshot is planned to focus on the core video processing pipeline.
+
+\begin{itemize}[noitemsep]
+    \item Add or refine requirements for object detection.
+    \item Add or refine requirements for highlight scoring.
+    \item Add TestRail cases for video upload and processing.
+    \item Update the SDD and SRS to reflect new design decisions.
+    \item Update the Docker configuration if new dependencies are added.
+\end{itemize}
+
+\subsection{Snapshot 3 -- Checkpoint 2 Planned Requirements}
+The third snapshot is planned to improve output quality and user-facing features.
+
+\begin{itemize}[noitemsep]
+    \item Add requirements for multiple highlight clips.
+    \item Add requirements for preview thumbnails.
+    \item Add requirements for configurable crop padding.
+    \item Add TestRail cases for new UI and export behavior.
+    \item Update documentation and workflow diagrams.
+\end{itemize}
+
+\subsection{Snapshot 4 -- Final Planned Requirements}
+The final snapshot is planned to focus on polish, error handling, documentation completion, and future work.
+
+\begin{itemize}[noitemsep]
+    \item Add requirements for improved error handling.
+    \item Add requirements for final Docker Compose configuration.
+    \item Add final TestRail reports.
+    \item Update SDD, SRS, README, Design Spec, and Snapshot Objectives.
+    \item Document incomplete features as future work.
+\end{itemize}
+
+\newpage
+
+% ══════════════════════════════════════════════
+% SECTION 9 -- ACCEPTANCE CRITERIA
+% ══════════════════════════════════════════════
+\section{Acceptance Criteria}
+
+The project shall be considered acceptable if the GitHub repository includes:
+\begin{itemize}[noitemsep]
+    \item A Software Requirements Specification as a \texttt{.tex} file.
+    \item A Software Design Document as a \texttt{.tex} file.
+    \item A README or user manual as a \texttt{.tex} file containing the Jira link.
+    \item A Design Spec as a \texttt{.tex} file.
+    \item A Snapshot Objectives document as a \texttt{.tex} file.
+    \item TestRail reports for the required snapshots.
+    \item A Docker Compose configuration or planned Docker service breakdown.
+    \item A workflow diagram explaining the high-level system flow.
+    \item Clear evidence of revision across snapshots.
+\end{itemize}
+
+\newpage
+
+% ══════════════════════════════════════════════
+% SECTION 10 -- REFERENCES
+% ══════════════════════════════════════════════
+\section{References}
+
+\begin{itemize}[noitemsep]
+    \item Flask Documentation: \url{https://flask.palletsprojects.com/}
+    \item Docker Documentation: \url{https://docs.docker.com/}
+    \item FFmpeg Documentation: \url{https://ffmpeg.org/documentation.html}
+    \item OpenCV Documentation: \url{https://docs.opencv.org/}
+    \item Ultralytics YOLO Documentation: \url{https://docs.ultralytics.com/}
+    \item Jira Documentation: \url{https://support.atlassian.com/jira/}
+    \item TestRail Documentation: \url{https://support.testrail.com/}
+\end{itemize}
+
+\end{document}

@@ -1,0 +1,376 @@
+\documentclass[12pt]{article}
+
+% Packages
+\usepackage[margin=1in]{geometry}
+\usepackage{titlesec}
+\usepackage{titletoc}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{parskip}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{setspace}
+\usepackage[hidelinks]{hyperref}
+
+\setstretch{1.15}
+
+% Header / Footer
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{CS3338 -- Group 07}
+\lhead{README / User Manual}
+\rfoot{Page \thepage}
+\lfoot{Automated Vertical Basketball Highlight System}
+
+% Section formatting
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
+\titleformat{\subsection}{\normalsize\bfseries}{}{0em}{}
+
+% ─────────────────────────────────────────────
+\begin{document}
+
+% ══════════════════════════════════════════════
+%  COVER PAGE
+% ══════════════════════════════════════════════
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+
+    {\LARGE\bfseries README / User Manual\\[0.5em]}
+    {\Large Automated Vertical Basketball Highlight System\\[2em]}
+
+    \rule{\linewidth}{0.5pt}\\[1em]
+
+    {\large CS3338 -- Software Engineering\\
+    California State University, Los Angeles\\[1em]}
+
+    {\large Group 07\\[2em]}
+    {\normalsize Christopher Ayala, Edwin Hui, Kazuho Igarashi, Nestor Adame Delgado, Ovi Ahmed\\[2em]}
+
+    \begin{tabular}{ll}
+        \textbf{Version:}  & 1.0                   \\
+        \textbf{Date:}     & \today                \\
+        \textbf{Status:}   & Snapshot 1 -- Initial Draft \\
+    \end{tabular}
+
+    \vfill
+    {\small Jira Project: \href{https://cs3338-group-07.atlassian.net}{https://cs3338-group-07.atlassian.net}}
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\newpage
+
+% ══════════════════════════════════════════════
+% SECTION 1 -- PROJECT OVERVIEW
+% ══════════════════════════════════════════════
+\section{Project Overview}
+
+\subsection{Project Name}
+Basketball Highlight Detection and Auto-Cropping System
+
+\subsection{Project Summary}
+The Basketball Highlight Detection and Auto-Cropping System is a web-based software project designed to help users upload basketball video footage and automatically generate highlight clips. The system uses a Flask-based user interface, computer vision processing, object detection, and FFmpeg-based video editing to identify important gameplay moments and export cropped clips for users to download.
+
+This project is planned and documented using the five major tools covered during the semester: GitHub, Jira, Docker, TestRail, and LaTeX.
+
+\subsection{Repository Purpose}
+The GitHub repository serves as the central location for all project documentation, configuration files, workflow diagrams, and supporting materials. The repository includes the Software Design Document (SDD), Software Requirements Specification (SRS), README/User Manual, Design Spec, Snapshot Objectives, workflow diagram, Docker configuration, and TestRail reports.
+
+% ══════════════════════════════════════════════
+% SECTION 2 -- JIRA LINK
+% ══════════════════════════════════════════════
+\section{Jira Project Link}
+
+The Jira board is used to organize project tasks, sprint objectives, possible bugs, testing concerns, and snapshot-based project progress.
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Jira Link:} \url{[Paste Your Jira Link Here]}
+\end{itemize}
+
+% ══════════════════════════════════════════════
+% SECTION 3 -- PROJECT OBJECTIVES
+% ══════════════════════════════════════════════
+\section{Formal Objective Breakdown}
+
+\subsection{Primary Objective}
+The primary objective of this project is to design a system that can automatically process basketball videos and generate highlight clips based on detected gameplay activity. The system is intended to reduce the amount of manual editing required to find and crop important moments from basketball footage.
+
+\subsection{Secondary Objectives}
+The project has the following secondary objectives:
+
+\begin{itemize}[noitemsep]
+    \item Provide a simple web-based interface for video upload and clip download.
+    \item Use computer vision techniques to detect basketball-related activity.
+    \item Identify candidate highlight segments using detection confidence and gameplay-based scoring logic.
+    \item Use FFmpeg to crop, trim, and export video clips.
+    \item Use Docker to define a repeatable project environment.
+    \item Use Jira to plan tasks and organize snapshot-based development.
+    \item Use TestRail to document testing plans, test cases, and test reports.
+    \item Use LaTeX to create formal project documentation.
+    \item Store all project materials in a GitHub repository.
+\end{itemize}
+
+\subsection{Snapshot-Based Objectives}
+The project is organized across four snapshots:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Snapshot 1 -- Initial Design:} Define the project scope, architecture, technology stack, GitHub repository structure, Jira backlog, and baseline documentation.
+    \item \textbf{Snapshot 2 -- Checkpoint 1:} Plan the core computer vision pipeline, including video upload, frame extraction, object detection, highlight scoring, and TestRail cases.
+    \item \textbf{Snapshot 3 -- Checkpoint 2:} Plan improvements to output quality and user interaction, including multi-clip export, preview thumbnails, crop padding, and session history.
+    \item \textbf{Snapshot 4 -- Final:} Finalize polish, error handling, documentation updates, Docker configuration, TestRail reports, and future work.
+\end{itemize}
+
+% ══════════════════════════════════════════════
+% SECTION 4 -- GOALS AND JUSTIFICATION
+% ══════════════════════════════════════════════
+\section{Goals and Reason for Need}
+
+\subsection{Why This Software Is Needed}
+Basketball games often contain long periods of footage, while only a small number of moments are useful for highlight reels, scouting clips, social media posts, or player review. Manually reviewing and editing footage can be time-consuming, especially when working with full games, practice sessions, or multiple recordings.
+
+This system is useful because it provides a planned solution for automatically identifying and exporting meaningful basketball clips. By using computer vision and video processing tools, the system can reduce repetitive manual editing work and provide users with a faster way to locate important gameplay moments.
+
+\subsection{Project Goals}
+The main goals of the project are:
+
+\begin{itemize}[noitemsep]
+    \item Reduce the time required to locate highlight moments in basketball videos.
+    \item Provide a simple upload-and-download workflow for users.
+    \item Demonstrate how object detection can support automated video editing.
+    \item Create a modular architecture that can be improved in future versions.
+    \item Document the project using professional software engineering artifacts.
+    \item Demonstrate semester tool usage through GitHub, Jira, Docker, TestRail, and LaTeX.
+\end{itemize}
+
+\subsection{Target Users}
+The intended users of the system include:
+
+\begin{itemize}[noitemsep]
+    \item Basketball players who want quick highlight clips.
+    \item Coaches who want to review game or practice footage.
+    \item Content creators who want short basketball clips for social media.
+    \item Students or developers studying computer vision and video processing.
+    \item Project evaluators reviewing the system design and documentation.
+\end{itemize}
+
+% ══════════════════════════════════════════════
+% SECTION 5 -- SYSTEM FEATURES
+% ══════════════════════════════════════════════
+\section{System Features}
+
+\subsection{Planned Core Features}
+The system is planned to include the following core features:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Video Upload:} Users can upload basketball video files through a web interface.
+    \item \textbf{File Validation:} The system checks uploaded files for supported formats and size limitations.
+    \item \textbf{Frame Extraction:} Uploaded videos are broken into frames for analysis.
+    \item \textbf{Object Detection:} A YOLO-based object detection model identifies relevant visual elements in the footage.
+    \item \textbf{Highlight Scoring:} The system scores candidate moments based on detection confidence and gameplay-related conditions.
+    \item \textbf{Video Cropping and Export:} FFmpeg is used to generate cropped or trimmed output clips.
+    \item \textbf{Result Page:} Users can view and download generated clips after processing.
+    \item \textbf{Session History:} A later planned feature may allow users to view recently processed clips during the current session.
+\end{itemize}
+
+\subsection{Documentation Features}
+The repository includes or is planned to include the following documentation:
+
+\begin{itemize}[noitemsep]
+    \item Software Design Document (SDD)
+    \item Software Requirements Specification (SRS)
+    \item README / User Manual
+    \item Design Specification
+    \item Snapshot Objectives
+    \item Workflow Diagram
+    \item TestRail Reports
+    \item Docker Compose configuration
+\end{itemize}
+
+% ══════════════════════════════════════════════
+% SECTION 6 -- HOW TO ACCESS OR DOWNLOAD
+% ══════════════════════════════════════════════
+\section{How to Download or Access the Project}
+
+\subsection{Accessing the GitHub Repository}
+The project files are stored in the GitHub repository for this assignment.
+
+\begin{itemize}[noitemsep]
+    \item \textbf{GitHub Repository:} \url{https://github.com/sys-32Dev/CS3888-AVBHS}
+\end{itemize}
+
+\subsection{Downloading the Repository}
+To download the project using Git, run the following command:
+
+\begin{verbatim}
+git clone https://github.com/sys-32Dev/CS3888-AVBHS.git
+\end{verbatim}
+
+After cloning the repository, move into the project directory:
+
+\begin{verbatim}
+cd CS3888-AVBHS
+\end{verbatim}
+
+\subsection{Downloading as a ZIP File}
+Users may also download the project manually from GitHub:
+
+\begin{enumerate}[noitemsep]
+    \item Open the GitHub repository page.
+    \item Click the green \textbf{Code} button.
+    \item Select \textbf{Download ZIP}.
+    \item Extract the ZIP file on the local machine.
+\end{enumerate}
+
+% ══════════════════════════════════════════════
+% SECTION 7 -- HOW TO RUN THE PROJECT
+% ══════════════════════════════════════════════
+\section{How to Run the Project}
+
+\subsection{Current Status}
+This project is primarily a software design and documentation project for the CS3338 final project assignment. The system is planned through formal documentation, Docker service structure, Jira tasks, TestRail testing, and workflow design.
+
+If an implementation is included, it should be run using the Docker configuration provided in the repository.
+
+\subsection{Expected Requirements}
+The following tools are expected for running or reviewing the project:
+
+\begin{itemize}[noitemsep]
+    \item Git
+    \item Docker
+    \item Docker Compose
+    \item Python
+    \item Flask
+    \item OpenCV
+    \item FFmpeg
+    \item YOLOv8 or compatible object detection model
+    \item A modern web browser
+\end{itemize}
+
+\subsection{Running with Docker Compose}
+If the Docker Compose configuration is included, the application can be started with:
+
+\begin{verbatim}
+docker compose up --build
+\end{verbatim}
+
+After the containers start, the user should open the web application in a browser. The expected local address is:
+
+\begin{verbatim}
+http://localhost:5000
+\end{verbatim}
+
+To stop the containers, run:
+
+\begin{verbatim}
+docker compose down
+\end{verbatim}
+
+\subsection{Basic User Workflow}
+A typical user workflow is expected to follow these steps:
+
+\begin{enumerate}[noitemsep]
+    \item Open the web application in a browser.
+    \item Upload a basketball video file.
+    \item Submit the video for processing.
+    \item Wait while the system analyzes the footage.
+    \item Review generated highlight clips on the result page.
+    \item Download the desired output clips.
+\end{enumerate}
+
+% ══════════════════════════════════════════════
+% SECTION 8 -- REPOSITORY STRUCTURE
+% ══════════════════════════════════════════════
+\section{Repository Structure}
+
+The repository is organized to separate documentation, workflow diagrams, Docker configuration, and testing materials.
+
+\begin{verbatim}
+CS3888-AVBHS/
+├── docs/
+│   ├── SDD.tex
+│   ├── SRS.tex
+│   ├── README_User_Manual.tex
+│   ├── Design_Spec.tex
+│   ├── Snapshot_Objectives.tex
+│   ├── Workflow.png
+│   └── testrail/
+│       ├── Snapshot2_TestRail_Report
+│       ├── Snapshot3_TestRail_Report
+│       └── Snapshot4_TestRail_Report
+├── docker-compose.yml
+├── README.md
+└── src/
+\end{verbatim}
+
+The exact repository structure may change as the project develops across later snapshots.
+
+% ══════════════════════════════════════════════
+% SECTION 9 -- PROJECT TOOLS
+% ══════════════════════════════════════════════
+\section{Project Tools}
+
+\subsection{GitHub}
+GitHub is used to store all project files, documentation, diagrams, Docker configuration, and final submission materials.
+
+\subsection{Jira}
+Jira is used to manage sprint planning, task assignments, possible bugs, and snapshot objectives.
+
+\subsection{Docker}
+Docker is used to define the project services and expected runtime environment. The Docker Compose file describes how the web application, processing worker, and supporting services would be organized.
+
+\subsection{TestRail}
+TestRail is used to create and report test cases for the required project snapshots. TestRail reports are planned for Snapshot 2, Snapshot 3, and Snapshot 4.
+
+\subsection{LaTeX}
+LaTeX is used to create formal project documents, including the SDD, SRS, README/User Manual, Design Spec, and Snapshot Objectives.
+
+% ══════════════════════════════════════════════
+% SECTION 10 -- LIMITATIONS
+% ══════════════════════════════════════════════
+\section{Limitations}
+
+The project has the following limitations:
+
+\begin{itemize}[noitemsep]
+    \item Detection accuracy may vary depending on video quality, camera angle, lighting, and player movement.
+    \item Large video files may require significant processing time.
+    \item The baseline design does not include permanent user accounts.
+    \item The baseline design does not include cloud storage.
+    \item Real-time video stream processing is considered future work.
+    \item The project focuses on software design, planning, documentation, and tool usage rather than a fully production-ready application.
+\end{itemize}
+
+% ══════════════════════════════════════════════
+% SECTION 11 -- FUTURE WORK
+% ══════════════════════════════════════════════
+\section{Future Work}
+
+Future improvements may include:
+
+\begin{itemize}[noitemsep]
+    \item Cloud storage integration using AWS S3 or a similar service.
+    \item User authentication and per-user clip libraries.
+    \item A fine-tuned basketball-specific YOLO model.
+    \item Real-time processing for live basketball streams.
+    \item More advanced highlight scoring based on shot detection, player movement, and scoreboard context.
+    \item Improved UI/UX design for previewing, selecting, and downloading clips.
+\end{itemize}
+
+% ══════════════════════════════════════════════
+% SECTION 12 -- SUPPORT AND CONTACT
+% ══════════════════════════════════════════════
+\section{Support and Contact}
+
+For questions about the project, users should refer to the GitHub repository documentation, Jira board, and project files. Development tasks, bugs, and planned improvements are tracked through Jira.
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Repository:} \url{https://github.com/sys-32Dev/CS3888-AVBHS}
+    \item \textbf{Jira Board:} \url{[Paste Your Jira Link Here]}
+\end{itemize}
+
+\end{document}
