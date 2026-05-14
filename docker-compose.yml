@@ -1,0 +1,19 @@
+services:
+  nginx-proxy:
+    image: nginx:latest
+    ports:
+      - 80:80
+  web:
+    build: web
+    # builds from DOCKERFILE in the WEB directory, which is not included in this sample, for obvious reasons.
+    ports:
+      - 5001:5001
+  worker:
+    build: worker
+    # same as above but the WORKER directory this time.
+  ffmpeg:
+    image: linuxserver/ffmpeg:latest
+    volumes:
+      - ./media:/input
+
+# Docker-Composes default network should suffice.
