@@ -1,0 +1,590 @@
+\documentclass[12pt]{article}
+
+% Packages
+\usepackage[margin=1in]{geometry}
+\usepackage{titlesec}
+\usepackage{titletoc}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{parskip}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{setspace}
+\usepackage[hidelinks]{hyperref}
+
+\setstretch{1.15}
+
+% Header / Footer
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{CS3338 -- Group 07}
+\lhead{Design Specification}
+\rfoot{Page \thepage}
+\lfoot{Automated Vertical Basketball Highlight System}
+
+% Section formatting
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
+\titleformat{\subsection}{\normalsize\bfseries}{}{0em}{}
+
+% ─────────────────────────────────────────────
+\begin{document}
+
+% ══════════════════════════════════════════════
+%  COVER PAGE
+% ══════════════════════════════════════════════
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+
+    {\LARGE\bfseries Design Specification\\[0.5em]}
+    {\Large Automated Vertical Basketball Highlight System\\[2em]}
+
+    \rule{\linewidth}{0.5pt}\\[1em]
+
+    {\large CS3338 -- Software Engineering\\
+    California State University, Los Angeles\\[1em]}
+
+    {\large Group 07\\[2em]}
+    {\normalsize Christopher Ayala, Edwin Hui, Kazuho Igarashi, Nestor Adame Delgado, Ovi Ahmed\\[2em]}
+
+    \begin{tabular}{ll}
+        \textbf{Version:}  & 1.0                   \\
+        \textbf{Date:}     & \today                \\
+        \textbf{Status:}   & Snapshot 1 -- Initial Draft \\
+    \end{tabular}
+
+    \vfill
+    {\small Jira Project: \href{https://cs3338-group-07.atlassian.net}{https://cs3338-group-07.atlassian.net}}
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\newpage
+
+% ══════════════════════════════════════════════
+% VERSION HISTORY
+% ══════════════════════════════════════════════
+\section*{Version History}
+\addcontentsline{toc}{section}{Version History}
+
+\begin{longtable}{|p{1in}|p{1.5in}|p{3.5in}|}
+\hline
+\textbf{Version} & \textbf{Date} & \textbf{Description} \\
+\hline
+1.0 & \today & Initial Design Specification for Snapshot 1. Defines pages, modules, tools, dependencies, and Docker-related design requirements. \\
+\hline
+\end{longtable}
+
+\newpage
+
+% ══════════════════════════════════════════════
+% SECTION 1 -- INTRODUCTION
+% ══════════════════════════════════════════════
+\section{Introduction}
+
+\subsection{Purpose}
+The purpose of this Design Specification is to describe the planned pages, system parts, tools, dependencies, libraries, and container requirements for the Automated Vertical Basketball Highlight System. This document provides a detailed breakdown of how each major part of the project is expected to function and how the parts interact with one another.
+
+\subsection{Project Summary}
+The Automated Vertical Basketball Highlight System is a web-based application designed to help users upload basketball footage and generate vertically cropped highlight clips. The system is planned to use a Flask-based interface, computer vision processing, object detection, highlight scoring, and FFmpeg-based video export.
+
+\subsection{Design Scope}
+This document focuses on the design of each page, feature, module, tool, and dependency required for the project. It is not intended to replace the Software Design Document (SDD) or Software Requirements Specification (SRS). Instead, it provides a more detailed implementation-oriented breakdown of the system components.
+
+% ══════════════════════════════════════════════
+% SECTION 2 -- PAGE BREAKDOWN
+% ══════════════════════════════════════════════
+\section{Page Breakdown}
+
+\subsection{Upload Page}
+The Upload Page is the first page users interact with. Its purpose is to allow users to select and submit a basketball video file for processing.
+
+\subsubsection*{Planned Elements}
+\begin{itemize}[noitemsep]
+    \item Project title and short system description.
+    \item File upload input field.
+    \item Submit button to begin processing.
+    \item Supported file type message.
+    \item File size warning or validation message.
+    \item Optional instructions explaining what type of basketball footage should be uploaded.
+\end{itemize}
+
+\subsubsection*{Expected Behavior}
+\begin{itemize}[noitemsep]
+    \item The user selects a local video file.
+    \item The system validates the file type and size.
+    \item If the file is valid, it is sent to the Flask backend.
+    \item If the file is invalid, the page displays an error message.
+\end{itemize}
+
+\subsection{Processing Page}
+The Processing Page informs the user that the video is being analyzed.
+
+\subsubsection*{Planned Elements}
+\begin{itemize}[noitemsep]
+    \item Processing status message.
+    \item Loading indicator or progress text.
+    \item Optional percentage progress indicator.
+    \item Message asking the user not to refresh the page during processing.
+\end{itemize}
+
+\subsubsection*{Expected Behavior}
+\begin{itemize}[noitemsep]
+    \item The page appears after a valid upload.
+    \item The system begins the video processing workflow.
+    \item Later snapshots may include AJAX polling to refresh progress without reloading the page.
+    \item When processing completes, the user is redirected to the Result Page.
+\end{itemize}
+
+\subsection{Result Page}
+The Result Page displays the generated highlight clip or clips after processing is complete.
+
+\subsubsection*{Planned Elements}
+\begin{itemize}[noitemsep]
+    \item List of generated highlight clips.
+    \item Download button for each clip.
+    \item Optional thumbnail preview for each clip.
+    \item Clip metadata such as filename, duration, and creation time.
+    \item Button to return to the Upload Page.
+\end{itemize}
+
+\subsubsection*{Expected Behavior}
+\begin{itemize}[noitemsep]
+    \item The user can review generated clips.
+    \item The user can download selected clips.
+    \item If no clips are generated, the page displays a clear message.
+\end{itemize}
+
+\subsection{History Page}
+The History Page is a planned later-snapshot feature. It will display recently processed videos and generated clips for the current session.
+
+\subsubsection*{Planned Elements}
+\begin{itemize}[noitemsep]
+    \item List of recently processed videos.
+    \item Links to output clips still available in storage.
+    \item Timestamp or session-based processing information.
+    \item Button to clear session history if supported.
+\end{itemize}
+
+\subsubsection*{Expected Behavior}
+\begin{itemize}[noitemsep]
+    \item The system displays session-based processing history.
+    \item The history is not intended to act as permanent user storage.
+    \item Future versions may add user accounts and persistent libraries.
+\end{itemize}
+
+\subsection{Error Page}
+The Error Page is used when the system cannot complete a request.
+
+\subsubsection*{Planned Elements}
+\begin{itemize}[noitemsep]
+    \item Clear error title.
+    \item Plain-language explanation of what went wrong.
+    \item Suggested next step for the user.
+    \item Link back to the Upload Page.
+\end{itemize}
+
+\subsubsection*{Expected Error Cases}
+\begin{itemize}[noitemsep]
+    \item Unsupported file format.
+    \item File too large.
+    \item Processing timeout.
+    \item FFmpeg export failure.
+    \item Object detection failure.
+    \item Missing output file.
+\end{itemize}
+
+\newpage
+
+% ══════════════════════════════════════════════
+% SECTION 3 -- ROUTE BREAKDOWN
+% ══════════════════════════════════════════════
+\section{Flask Route Breakdown}
+
+\begin{longtable}{|p{1.2in}|p{1.2in}|p{3.5in}|}
+\hline
+\textbf{Route} & \textbf{Method} & \textbf{Purpose} \\
+\hline
+\texttt{/} & GET & Displays the Upload Page. \\
+\hline
+\texttt{/upload} & POST & Receives uploaded video files and validates the upload. \\
+\hline
+\texttt{/process} & GET/POST & Starts or monitors the video processing workflow. \\
+\hline
+\texttt{/result} & GET & Displays generated highlight clips after processing. \\
+\hline
+\texttt{/download/<filename>} & GET & Allows the user to download a generated clip. \\
+\hline
+\texttt{/history} & GET & Displays session-based processing history in a later snapshot. \\
+\hline
+\texttt{/status/<job\_id>} & GET & Planned endpoint for AJAX polling and processing status updates. \\
+\hline
+\end{longtable}
+
+% ══════════════════════════════════════════════
+% SECTION 4 -- SYSTEM MODULE BREAKDOWN
+% ══════════════════════════════════════════════
+\section{System Module Breakdown}
+
+\subsection{Upload Handler}
+The Upload Handler is responsible for receiving video files from the web interface.
+
+\subsubsection*{Responsibilities}
+\begin{itemize}[noitemsep]
+    \item Receive uploaded files from the browser.
+    \item Validate file extension and file size.
+    \item Save valid files to the upload storage location.
+    \item Reject unsupported or unsafe uploads.
+    \item Return validation feedback to the user interface.
+\end{itemize}
+
+\subsection{Frame Extraction Module}
+The Frame Extraction Module prepares video data for computer vision analysis.
+
+\subsubsection*{Responsibilities}
+\begin{itemize}[noitemsep]
+    \item Open uploaded video files.
+    \item Extract frames at a configured interval.
+    \item Pass frames to the detection pipeline.
+    \item Support frame sampling to reduce processing time.
+\end{itemize}
+
+\subsection{YOLO Detector Module}
+The YOLO Detector Module is responsible for object detection in extracted video frames.
+
+\subsubsection*{Responsibilities}
+\begin{itemize}[noitemsep]
+    \item Load the YOLOv8 or compatible object detection model.
+    \item Run inference on selected frames.
+    \item Return bounding boxes, confidence scores, and detected classes.
+    \item Provide detection results to the Highlight Scorer.
+\end{itemize}
+
+\subsection{Highlight Scorer Module}
+The Highlight Scorer Module determines which parts of the video are likely to contain important basketball moments.
+
+\subsubsection*{Responsibilities}
+\begin{itemize}[noitemsep]
+    \item Analyze object detection results.
+    \item Evaluate detection confidence.
+    \item Estimate ball or player proximity to important regions such as the hoop.
+    \item Assign scores to candidate highlight segments.
+    \item Select segments that pass a configurable threshold.
+\end{itemize}
+
+\subsection{Tracking Module}
+The Tracking Module is planned to maintain smoother focus on the subject or region of interest across frames.
+
+\subsubsection*{Responsibilities}
+\begin{itemize}[noitemsep]
+    \item Track detected objects across consecutive frames.
+    \item Reduce unstable crop movement.
+    \item Support Kalman filtering or similar smoothing techniques.
+    \item Provide stable coordinates to the Crop Engine.
+\end{itemize}
+
+\subsection{Crop Engine}
+The Crop Engine determines how the video should be vertically cropped.
+
+\subsubsection*{Responsibilities}
+\begin{itemize}[noitemsep]
+    \item Calculate crop dimensions for vertical video output.
+    \item Keep important gameplay action within the crop region.
+    \item Apply configurable crop padding.
+    \item Pass crop parameters to FFmpeg.
+\end{itemize}
+
+\subsection{FFmpeg Export Module}
+The FFmpeg Export Module generates the final video clips.
+
+\subsubsection*{Responsibilities}
+\begin{itemize}[noitemsep]
+    \item Trim selected video segments.
+    \item Crop clips into vertical format.
+    \item Generate output video files.
+    \item Generate thumbnails in later snapshots.
+    \item Store exported clips in the output storage location.
+\end{itemize}
+
+\subsection{Session History Module}
+The Session History Module is planned for later snapshots.
+
+\subsubsection*{Responsibilities}
+\begin{itemize}[noitemsep]
+    \item Store recently processed video information for the current session.
+    \item Display previous outputs on the History Page.
+    \item Avoid permanent user data storage unless authentication is added in future work.
+\end{itemize}
+
+\subsection{Logging Module}
+The Logging Module records processing events and failures.
+
+\subsubsection*{Responsibilities}
+\begin{itemize}[noitemsep]
+    \item Record upload events.
+    \item Record processing status.
+    \item Record FFmpeg or detection failures.
+    \item Support debugging during testing.
+\end{itemize}
+
+\newpage
+
+% ══════════════════════════════════════════════
+% SECTION 5 -- TOOL BREAKDOWN
+% ══════════════════════════════════════════════
+\section{Tool Breakdown}
+
+\subsection{GitHub}
+GitHub is used as the central repository for all project files. It stores the SDD, SRS, README/User Manual, Design Specification, Snapshot Objectives, Workflow Diagram, Docker configuration, and TestRail reports.
+
+\subsection{Jira}
+Jira is used for sprint planning and task tracking. The team uses Jira to organize snapshot objectives, assign work, track possible bugs, and document development tasks.
+
+\subsection{Docker}
+Docker is used to define a consistent project environment. The project is expected to include a \texttt{docker-compose.yml} file describing the services needed to run the system.
+
+\subsection{TestRail}
+TestRail is used to create, execute, and report test cases. TestRail reports are required for later snapshots and should cover major system features such as upload validation, video processing, clip export, and UI behavior.
+
+\subsection{LaTeX}
+LaTeX is used to create formal project documentation. Required documents are written as \texttt{.tex} files and stored in the GitHub repository.
+
+\newpage
+
+% ══════════════════════════════════════════════
+% SECTION 6 -- DOCKER SERVICE BREAKDOWN
+% ══════════════════════════════════════════════
+\section{Docker Service Breakdown}
+
+\subsection{Web Service}
+The Web Service hosts the Flask application.
+
+\subsubsection*{Responsibilities}
+\begin{itemize}[noitemsep]
+    \item Serve HTML pages.
+    \item Handle file upload requests.
+    \item Display processing status.
+    \item Display result and download pages.
+    \item Communicate with the worker service or processing module.
+\end{itemize}
+
+\subsection{Worker Service}
+The Worker Service performs video processing tasks.
+
+\subsubsection*{Responsibilities}
+\begin{itemize}[noitemsep]
+    \item Read uploaded video files.
+    \item Extract frames.
+    \item Run object detection.
+    \item Score highlight candidates.
+    \item Call FFmpeg for cropping and export.
+    \item Write output clips to shared storage.
+\end{itemize}
+
+\subsection{Shared Storage Volumes}
+Shared storage volumes allow the web service and worker service to access uploaded files and generated clips.
+
+\subsubsection*{Planned Volumes}
+\begin{itemize}[noitemsep]
+    \item \texttt{uploads}: stores uploaded user videos.
+    \item \texttt{clips\_output}: stores generated highlight clips.
+    \item \texttt{logs}: stores processing and error logs.
+\end{itemize}
+
+\subsection{Optional Reverse Proxy}
+A reverse proxy such as NGINX may be added in future versions if the application is deployed beyond local development.
+
+\subsubsection*{Responsibilities}
+\begin{itemize}[noitemsep]
+    \item Serve static files.
+    \item Forward requests to the Flask application.
+    \item Support HTTPS in a deployed environment.
+\end{itemize}
+
+% ══════════════════════════════════════════════
+% SECTION 7 -- PACKAGES AND DEPENDENCIES
+% ══════════════════════════════════════════════
+\section{Packages, Dependencies, and Libraries}
+
+\subsection{Python Dependencies}
+
+\begin{longtable}{|p{1.6in}|p{4.4in}|}
+\hline
+\textbf{Package} & \textbf{Purpose} \\
+\hline
+\texttt{Flask} & Provides the backend web framework, routing, and template rendering. \\
+\hline
+\texttt{Werkzeug} & Supports secure file handling and Flask utilities. \\
+\hline
+\texttt{OpenCV} & Supports video reading, frame extraction, and image processing. \\
+\hline
+\texttt{ultralytics} & Provides YOLOv8 object detection support. \\
+\hline
+\texttt{numpy} & Supports numerical operations used in image and tracking calculations. \\
+\hline
+\texttt{filterpy} & Planned dependency for Kalman filtering and object tracking. \\
+\hline
+\texttt{Pillow} & Planned dependency for thumbnail image handling. \\
+\hline
+\texttt{flask-session} & Planned dependency for server-side session history support. \\
+\hline
+\texttt{python-dotenv} & Supports environment variable loading from a \texttt{.env} file. \\
+\hline
+\end{longtable}
+
+\subsection{System Dependencies}
+
+\begin{longtable}{|p{1.6in}|p{4.4in}|}
+\hline
+\textbf{Dependency} & \textbf{Purpose} \\
+\hline
+\texttt{FFmpeg} & Required for trimming, cropping, converting, exporting clips, and generating thumbnails. \\
+\hline
+\texttt{Docker} & Required to run the project in containers. \\
+\hline
+\texttt{Docker Compose} & Required to define and start multiple services together. \\
+\hline
+\texttt{Git} & Required for version control and repository management. \\
+\hline
+\end{longtable}
+
+\subsection{Frontend Dependencies}
+
+\begin{longtable}{|p{1.6in}|p{4.4in}|}
+\hline
+\textbf{Dependency} & \textbf{Purpose} \\
+\hline
+\texttt{HTML} & Defines the structure of the web pages. \\
+\hline
+\texttt{CSS} & Controls page styling and layout. \\
+\hline
+\texttt{Bootstrap} & Planned UI framework for responsive layout and basic components. \\
+\hline
+\texttt{JavaScript} & Supports client-side validation and AJAX polling in later snapshots. \\
+\hline
+\end{longtable}
+
+\newpage
+
+% ══════════════════════════════════════════════
+% SECTION 8 -- DATA FLOW
+% ══════════════════════════════════════════════
+\section{Data Flow}
+
+\subsection{Upload Flow}
+\begin{enumerate}[noitemsep]
+    \item User opens the web application in a browser.
+    \item User selects a basketball video file.
+    \item Flask receives the file through the upload route.
+    \item The Upload Handler validates the file.
+    \item The file is saved to upload storage.
+\end{enumerate}
+
+\subsection{Processing Flow}
+\begin{enumerate}[noitemsep]
+    \item The worker reads the uploaded video.
+    \item OpenCV extracts frames from the video.
+    \item YOLOv8 processes selected frames.
+    \item Detection results are sent to the Highlight Scorer.
+    \item Candidate highlight segments are selected.
+    \item The Crop Engine calculates vertical crop parameters.
+    \item FFmpeg generates output clips.
+\end{enumerate}
+
+\subsection{Result Flow}
+\begin{enumerate}[noitemsep]
+    \item Generated clips are saved to output storage.
+    \item Flask reads available output clips.
+    \item The Result Page displays download links.
+    \item The user downloads selected clips.
+\end{enumerate}
+
+% ══════════════════════════════════════════════
+% SECTION 9 -- ACCESS CONTROL
+% ══════════════════════════════════════════════
+\section{Access Control}
+
+\subsection{User Access}
+Users access the system through the web browser. Users can upload videos, start processing, and download generated clips. In the baseline design, users do not have permanent accounts.
+
+\subsection{Developer Access}
+Developers access the GitHub repository, Jira board, Docker configuration, and project source files. Developers are responsible for updating documentation, tasks, dependencies, and system design.
+
+\subsection{Tester Access}
+Testers access TestRail to create test cases, execute test runs, and export reports. Testers may also use the application interface to validate upload, processing, and download behavior.
+
+\subsection{System Access}
+The Flask application can access uploaded files and output clips. The worker service can access uploaded videos, model files, processing logs, and output storage. The object detection model only processes video frames and does not require direct user account data.
+
+% ══════════════════════════════════════════════
+% SECTION 10 -- SNAPSHOT DESIGN PLAN
+% ══════════════════════════════════════════════
+\section{Snapshot Design Plan}
+
+\subsection{Snapshot 1 -- Initial Design}
+Snapshot 1 defines the baseline design of the project.
+
+\begin{itemize}[noitemsep]
+    \item Establish project scope and objective.
+    \item Create initial SDD, SRS, README/User Manual, Design Spec, and Workflow Diagram.
+    \item Define baseline Flask interface.
+    \item Define planned Docker service structure.
+    \item Create Jira tasks and initial sprint backlog.
+\end{itemize}
+
+\subsection{Snapshot 2 -- Checkpoint 1 Planned Design}
+Snapshot 2 is planned to focus on the core computer vision pipeline.
+
+\begin{itemize}[noitemsep]
+    \item Add or refine Upload Handler.
+    \item Add Frame Extraction Module.
+    \item Add YOLO Detector Module.
+    \item Add Highlight Scorer Module.
+    \item Add TestRail cases for upload and detection.
+    \item Update Docker dependencies.
+\end{itemize}
+
+\subsection{Snapshot 3 -- Checkpoint 2 Planned Design}
+Snapshot 3 is planned to improve output quality and user-facing functionality.
+
+\begin{itemize}[noitemsep]
+    \item Add multi-clip export.
+    \item Add thumbnail previews.
+    \item Add configurable crop padding.
+    \item Add session history page.
+    \item Add TestRail cases for new UI and export behavior.
+\end{itemize}
+
+\subsection{Snapshot 4 -- Final Planned Design}
+Snapshot 4 is planned to finalize polish, stability, and documentation.
+
+\begin{itemize}[noitemsep]
+    \item Add error handling pages.
+    \item Improve logging.
+    \item Finalize Docker Compose configuration.
+    \item Add final TestRail reports.
+    \item Document future work.
+\end{itemize}
+
+\newpage
+
+% ══════════════════════════════════════════════
+% SECTION 11 -- REFERENCES
+% ══════════════════════════════════════════════
+\section{References}
+
+\begin{itemize}[noitemsep]
+    \item Flask Documentation: \url{https://flask.palletsprojects.com/}
+    \item Docker Documentation: \url{https://docs.docker.com/}
+    \item FFmpeg Documentation: \url{https://ffmpeg.org/documentation.html}
+    \item OpenCV Documentation: \url{https://docs.opencv.org/}
+    \item Ultralytics YOLO Documentation: \url{https://docs.ultralytics.com/}
+    \item Jira Documentation: \url{https://support.atlassian.com/jira/}
+    \item TestRail Documentation: \url{https://support.testrail.com/}
+\end{itemize}
+
+\end{document}

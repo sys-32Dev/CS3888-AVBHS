@@ -1,0 +1,316 @@
+\documentclass[12pt]{article}
+
+% Packages
+\usepackage[margin=1in]{geometry}
+\usepackage{titlesec}
+\usepackage{titletoc}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{parskip}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{setspace}
+\usepackage[hidelinks]{hyperref}
+
+\setstretch{1.15}
+
+% Header / Footer
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{CS3338 -- Group 07}
+\lhead{Snapshot Objectives}
+\rfoot{Page \thepage}
+\lfoot{Automated Vertical Basketball Highlight System}
+
+% Section formatting
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
+\titleformat{\subsection}{\normalsize\bfseries}{}{0em}{}
+
+% ─────────────────────────────────────────────
+\begin{document}
+
+% ══════════════════════════════════════════════
+%  COVER PAGE
+% ══════════════════════════════════════════════
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+
+    {\LARGE\bfseries Snapshot Objectives\\[0.5em]}
+    {\Large Automated Vertical Basketball Highlight System\\[2em]}
+
+    \rule{\linewidth}{0.5pt}\\[1em]
+
+    {\large CS3338 -- Software Engineering\\
+    California State University, Los Angeles\\[1em]}
+
+    {\large Group 07\\[2em]}
+    {\normalsize Christopher Ayala, Edwin Hui, Kazuho Igarashi, Nestor Adame Delgado, Ovi Ahmed\\[2em]}
+
+    \begin{tabular}{ll}
+        \textbf{Version:}  & 1.0                   \\
+        \textbf{Date:}     & \today                \\
+        \textbf{Status:}   & Snapshot 1 -- Initial Draft \\
+    \end{tabular}
+
+    \vfill
+    {\small Jira Project: \href{https://cs3338-group-07.atlassian.net}{https://cs3338-group-07.atlassian.net}}
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\newpage
+
+% ══════════════════════════════════════════════
+% VERSION HISTORY
+% ══════════════════════════════════════════════
+\section*{Version History}
+\addcontentsline{toc}{section}{Version History}
+
+\begin{longtable}{|p{1in}|p{1.5in}|p{3.5in}|}
+\hline
+\textbf{Version} & \textbf{Date} & \textbf{Description} \\
+\hline
+1.0 & \today & Initial Snapshot Objectives document for Snapshot 1. Defines the planned goals for Snapshots 1 through 4. \\
+\hline
+\end{longtable}
+
+\newpage
+
+% ══════════════════════════════════════════════
+% SECTION 1 -- PURPOSE
+% ══════════════════════════════════════════════
+\section{Purpose}
+
+The purpose of this document is to define the objectives for each project snapshot of the Automated Vertical Basketball Highlight System. Each snapshot represents a planned checkpoint in the project timeline and identifies the major goals, design updates, documentation updates, testing work, and tool usage expected at that stage.
+
+This document is intended to provide a clear overview of what the team plans to complete during each snapshot. Snapshot 1 describes the current initial design work. Snapshots 2 through 4 describe planned future objectives that will be updated as the project progresses.
+
+% ══════════════════════════════════════════════
+% SECTION 2 -- PROJECT OVERVIEW
+% ══════════════════════════════════════════════
+\section{Project Overview}
+
+The Automated Vertical Basketball Highlight System is a planned web-based application that allows users to upload basketball footage and generate vertically cropped highlight clips. The system is expected to use a Flask-based user interface, OpenCV-based frame processing, YOLOv8 object detection, highlight scoring logic, FFmpeg video export, Docker service configuration, Jira task management, TestRail test documentation, and LaTeX-based project documents.
+
+The project is organized into four snapshots:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Snapshot 1 -- Initial Design:} Establish project foundation, documentation, repository structure, tool setup, and baseline architecture.
+    \item \textbf{Snapshot 2 -- Checkpoint 1:} Plan and validate the core computer vision pipeline and initial TestRail coverage.
+    \item \textbf{Snapshot 3 -- Checkpoint 2:} Expand output quality, user interface features, clip preview functionality, and session history.
+    \item \textbf{Snapshot 4 -- Final:} Finalize polish, stability, documentation, Docker configuration, testing reports, and future work.
+\end{itemize}
+
+\newpage
+
+% ══════════════════════════════════════════════
+% SECTION 3 -- SNAPSHOT 1
+% ══════════════════════════════════════════════
+\section{Snapshot 1 -- Initial Design Objectives}
+
+\subsection{Objective Summary}
+Snapshot 1 establishes the foundation of the project. The main purpose of this snapshot is to define the project idea, create the initial documentation structure, set up required tools, and describe the planned architecture before major feature expansion.
+
+\subsection{Completed Objectives}
+The following objectives are completed or established during Snapshot 1:
+
+\begin{itemize}[noitemsep]
+    \item Define the overall project concept and purpose.
+    \item Establish the system architecture and component responsibilities.
+    \item Define the planned technology stack.
+    \item Define the planned Docker service structure.
+    \item Design the baseline Flask UI page layout.
+    \item Define the expected user interaction flow.
+    \item Set up the Jira project for task tracking and sprint planning.
+    \item Create the initial Jira sprint backlog.
+    \item Configure the GitHub repository structure.
+    \item Create the initial Software Design Document (SDD).
+    \item Create the initial Software Requirements Specification (SRS).
+    \item Create the README/User Manual document.
+    \item Create the Design Specification document.
+    \item Create the Workflow Diagram.
+    \item Create the Snapshot Objectives document.
+\end{itemize}
+
+\subsection{Snapshot 1 Deliverables}
+The expected Snapshot 1 deliverables include:
+
+\begin{itemize}[noitemsep]
+    \item \texttt{SDD.tex}
+    \item \texttt{SRS.tex}
+    \item \texttt{README\_User\_Manual.tex}
+    \item \texttt{Design\_Spec.tex}
+    \item \texttt{Snapshot\_Objectives.tex}
+    \item Workflow diagram image or document
+    \item Jira project link
+    \item Initial Docker Compose design or configuration
+    \item GitHub repository containing the project documents
+\end{itemize}
+
+% ══════════════════════════════════════════════
+% SECTION 4 -- SNAPSHOT 2
+% ══════════════════════════════════════════════
+\section{Snapshot 2 -- Checkpoint 1 Planned Objectives}
+
+\subsection{Objective Summary}
+Snapshot 2 is planned to focus on the core computer vision workflow. The main goal of this checkpoint is to define and validate how uploaded basketball footage will move through the processing pipeline, from upload to detection to highlight scoring and export preparation.
+
+\subsection{Planned Objectives}
+The following objectives are planned for Snapshot 2:
+
+\begin{itemize}[noitemsep]
+    \item Integrate and validate the core computer vision pipeline end-to-end.
+    \item Add or refine the Highlight Scorer module.
+    \item Define how per-frame detection confidence will be analyzed.
+    \item Define how ball proximity to the hoop or important gameplay regions will contribute to highlight scoring.
+    \item Establish a configurable threshold for selecting candidate highlight clips.
+    \item Update the \texttt{/process} route to support lightweight AJAX polling for processing status.
+    \item Add shared Docker volume planning for generated output clips.
+    \item Define or update the \texttt{clips\_output} volume shared between the \texttt{web} and \texttt{worker} containers.
+    \item Add or document the planned \texttt{filterpy} dependency for Kalman filtering and tracking support.
+    \item Create TestRail test cases for video upload, detection accuracy, and clip export.
+    \item Update the SDD and SRS to reflect new design and requirement details.
+    \item Update the Design Specification with any new modules, routes, dependencies, and Docker details.
+    \item Update the Workflow Diagram if the processing pipeline changes.
+\end{itemize}
+
+\subsection{Expected Deliverables}
+The expected Snapshot 2 deliverables include:
+
+\begin{itemize}[noitemsep]
+    \item Updated SDD
+    \item Updated SRS
+    \item Updated Design Specification
+    \item Updated Docker Compose configuration or service breakdown
+    \item Updated Workflow Diagram
+    \item TestRail test cases for upload, detection, and clip export
+    \item TestRail report for Snapshot 2
+    \item Updated Jira tasks and sprint progress
+\end{itemize}
+
+\subsection{Success Criteria}
+Snapshot 2 will be considered successful if the project clearly defines how the core video processing pipeline works and provides test documentation for the initial upload, detection, and export flow.
+
+\newpage
+
+% ══════════════════════════════════════════════
+% SECTION 5 -- SNAPSHOT 3
+% ══════════════════════════════════════════════
+\section{Snapshot 3 -- Checkpoint 2 Planned Objectives}
+
+\subsection{Objective Summary}
+Snapshot 3 is planned to focus on improving output quality and expanding the user interface. This checkpoint will build on the core processing pipeline by adding more user-facing features and better control over generated clips.
+
+\subsection{Planned Objectives}
+The following objectives are planned for Snapshot 3:
+
+\begin{itemize}[noitemsep]
+    \item Redesign the Export Module to support multiple highlight clips from a single input video.
+    \item Allow users to preview a list of detected highlights.
+    \item Allow users to selectively download generated clips from the \texttt{/result} page.
+    \item Generate preview thumbnails for highlight clips using FFmpeg.
+    \item Display clip thumbnails on the result page before download.
+    \item Add configurable crop padding in the Crop Engine.
+    \item Reduce overly aggressive cropping during fast-moving plays.
+    \item Add a planned \texttt{/history} route for session-based history.
+    \item Display previously processed videos and output clips within the current browser session.
+    \item Add or document the planned \texttt{Pillow} dependency for thumbnail support.
+    \item Add or document the planned \texttt{flask-session} dependency for server-side session storage.
+    \item Add TestRail cases covering multi-clip selection, thumbnail rendering, and session history.
+    \item Update SDD, SRS, README/User Manual, Design Specification, and Workflow Diagram as needed.
+\end{itemize}
+
+\subsection{Expected Deliverables}
+The expected Snapshot 3 deliverables include:
+
+\begin{itemize}[noitemsep]
+    \item Updated SDD
+    \item Updated SRS
+    \item Updated README/User Manual
+    \item Updated Design Specification
+    \item Updated Workflow Diagram
+    \item TestRail test cases for multi-clip export, thumbnails, and session history
+    \item TestRail report for Snapshot 3
+    \item Updated Jira tasks and sprint progress
+\end{itemize}
+
+\subsection{Success Criteria}
+Snapshot 3 will be considered successful if the project clearly expands the user-facing design, defines improved clip output behavior, and documents tests for the new planned features.
+
+\newpage
+
+% ══════════════════════════════════════════════
+% SECTION 6 -- SNAPSHOT 4
+% ══════════════════════════════════════════════
+\section{Snapshot 4 -- Final Planned Objectives}
+
+\subsection{Objective Summary}
+Snapshot 4 is planned to focus on final polish, stability, testing completion, documentation completion, and future work. This checkpoint represents the final project submission stage.
+
+\subsection{Planned Objectives}
+The following objectives are planned for Snapshot 4:
+
+\begin{itemize}[noitemsep]
+    \item Add graceful error handling for unsupported file formats.
+    \item Add graceful error handling for processing failures and timeout events.
+    \item Define logging behavior for exceptions in the worker container.
+    \item Store worker logs using a Docker-mounted volume.
+    \item Introduce or document frame sampling for YOLO processing optimization.
+    \item Reduce processing time while maintaining acceptable detection accuracy.
+    \item Improve Bootstrap layout for mobile responsiveness.
+    \item Add file size validation feedback before upload submission.
+    \item Finalize the \texttt{docker-compose.yml} service configuration.
+    \item Add health checks for the \texttt{web} and \texttt{worker} services.
+    \item Add a Docker restart policy such as \texttt{unless-stopped}.
+    \item Complete final SDD, SRS, README/User Manual, Design Specification, Snapshot Objectives, and Workflow updates.
+    \item Add final TestRail test report documentation.
+    \item Document future work and features not completed within the project timeline.
+\end{itemize}
+
+\subsection{Expected Future Work}
+The following features are identified as possible future enhancements beyond the project scope:
+
+\begin{itemize}[noitemsep]
+    \item Cloud storage integration using AWS S3 for persistent clip hosting.
+    \item Fine-tuned YOLOv8 model trained on a labeled basketball dataset.
+    \item Improved detection accuracy in low-light and crowded scenes.
+    \item User authentication and per-user clip libraries.
+    \item Real-time streaming input using RTMP for live game processing.
+\end{itemize}
+
+\subsection{Expected Deliverables}
+The expected Snapshot 4 deliverables include:
+
+\begin{itemize}[noitemsep]
+    \item Final SDD
+    \item Final SRS
+    \item Final README/User Manual
+    \item Final Design Specification
+    \item Final Snapshot Objectives
+    \item Final Workflow Diagram
+    \item Final Docker Compose configuration
+    \item TestRail report for Snapshot 4
+    \item Updated Jira board showing final task progress
+    \item Documented future work
+\end{itemize}
+
+\subsection{Success Criteria}
+Snapshot 4 will be considered successful if the project repository contains all required documentation, testing artifacts, workflow diagrams, Docker planning, Jira references, and final project updates.
+
+\newpage
+
+% ══════════════════════════════════════════════
+% SECTION 7 -- SUMMARY
+% ══════════════════════════════════════════════
+\section{Summary}
+
+The Snapshot Objectives document provides a clear checkpoint-based plan for the Automated Vertical Basketball Highlight System. Snapshot 1 establishes the project foundation and initial documentation. Snapshot 2 focuses on the core computer vision and video processing pipeline. Snapshot 3 expands user-facing output features and improves clip usability. Snapshot 4 finalizes polish, stability, testing, documentation, and future work.
+
+These objectives will guide the team across the project timeline and provide a reference for updating the SDD, SRS, README/User Manual, Design Specification, Workflow Diagram, Jira tasks, Docker configuration, and TestRail reports at each snapshot.
+
+\end{document}
