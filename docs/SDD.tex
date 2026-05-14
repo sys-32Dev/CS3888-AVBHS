@@ -293,81 +293,81 @@ history and user sessions.
     \item Configured GitHub repository structure.
 \end{itemize}
 
-\subsection{Snapshot 2 -- Checkpoint 1}
-At this checkpoint, the core computer vision pipeline was integrated and validated
-end-to-end. The following design updates were made:
+\subsection{Snapshot 2 -- Checkpoint 1 (Planned)}
+At this checkpoint, the project is planned to integrate and validate the core
+computer vision pipeline end-to-end. The following design updates are expected:
 
 \begin{itemize}[noitemsep]
-    \item \textbf{Highlight Scorer module introduced.} A heuristic scoring module
-          was added to the application layer. It analyzes per-frame detection
+    \item \textbf{Highlight Scorer module (planned).} A heuristic scoring module
+          will be added to the application layer. It will analyze per-frame detection
           confidence and ball proximity to the hoop to identify candidate highlight
-          segments. Clips scoring above a configurable threshold are flagged for export.
-    \item \textbf{Processing status via polling.} The \texttt{/process} route was
-          updated to support lightweight AJAX polling so the browser refreshes
-          progress without a full page reload.
-    \item \textbf{Volume mount added for output clips.} The \texttt{docker-compose}
-          configuration was updated to mount a named volume (\texttt{clips\_output})
-          shared between the \texttt{web} and \texttt{worker} containers, ensuring
-          processed files persist across container restarts.
-    \item \textbf{New dependency: \texttt{filterpy}.} The Kalman filter implementation
-          was migrated from a custom NumPy implementation to the \texttt{filterpy}
-          library for improved maintainability and accuracy.
-    \item \textbf{TestRail test cases added.} Test cases covering video upload,
-          detection accuracy, and clip export were defined and executed in TestRail.
+          segments. Clips scoring above a configurable threshold will be flagged
+          for export.
+    \item \textbf{Processing status via polling (planned).} The \texttt{/process}
+          route will be updated to support lightweight AJAX polling so the browser
+          can refresh progress without a full page reload.
+    \item \textbf{Volume mount for output clips (planned).} The \texttt{docker-compose}
+          configuration will include a named volume (\texttt{clips\_output}) shared
+          between the \texttt{web} and \texttt{worker} containers, ensuring processed
+          files persist across container restarts.
+    \item \textbf{New dependency: \texttt{filterpy} (planned).} The Kalman filter
+          implementation is expected to transition from a custom NumPy implementation
+          to the \texttt{filterpy} library for improved maintainability and accuracy.
+    \item \textbf{TestRail test cases (planned).} Test cases covering video upload,
+          detection accuracy, and clip export will be defined and executed in TestRail.
 \end{itemize}
 
-\subsection{Snapshot 3 -- Checkpoint 2}
-This checkpoint focused on improving output quality and expanding the user interface.
-The following design updates were made:
+\subsection{Snapshot 3 -- Checkpoint 2 (Planned)}
+This checkpoint is planned to focus on improving output quality and expanding
+the user interface. The following updates are expected:
 
 \begin{itemize}[noitemsep]
-    \item \textbf{Multi-clip export.} The Export Module was redesigned to support
-          exporting multiple highlight clips from a single input video. Users can
-          now preview a list of detected highlights and selectively download clips
-          via the \texttt{/result} page.
-    \item \textbf{Clip preview thumbnails.} The Flask UI was updated to generate
-          a thumbnail image for each highlight clip using FFmpeg's
-          \texttt{-vframes 1} flag. Thumbnails are displayed on the result page
-          before download.
-    \item \textbf{Configurable crop padding.} A padding parameter was introduced
-          in the Crop Engine to add a configurable margin around the tracked
-          subject, reducing aggressive cropping on fast-moving plays.
-    \item \textbf{New route: \texttt{/history}.} A session-based history page was
-          added, listing previously processed videos and their output clips within
-          the current browser session.
-    \item \textbf{New dependencies: \texttt{Pillow}, \texttt{flask-session}.}
-          Pillow is used for thumbnail generation; flask-session provides
-          server-side session storage for the history feature.
-    \item \textbf{TestRail test cases updated.} Additional test cases covering
-          multi-clip selection, thumbnail rendering, and session history were
-          added and executed.
+    \item \textbf{Multi-clip export (planned).} The Export Module will be redesigned
+          to support exporting multiple highlight clips from a single input video.
+          Users will be able to preview a list of detected highlights and selectively
+          download clips via the \texttt{/result} page.
+    \item \textbf{Clip preview thumbnails (planned).} The Flask UI will be updated
+          to generate a thumbnail image for each highlight clip using FFmpeg's
+          \texttt{-vframes 1} flag. Thumbnails will be displayed on the result page
+          prior to download.
+    \item \textbf{Configurable crop padding (planned).} A padding parameter will
+          be introduced in the Crop Engine to add a configurable margin around the
+          tracked subject, reducing aggressive cropping on fast-moving plays.
+    \item \textbf{New route: \texttt{/history} (planned).} A session-based history
+          page will be added to list previously processed videos and their output
+          clips within the current browser session.
+    \item \textbf{New dependencies: \texttt{Pillow}, \texttt{flask-session} (planned).}
+          Pillow will be used for thumbnail generation, and flask-session will
+          provide server-side session storage for the history feature.
+    \item \textbf{TestRail updates (planned).} Additional test cases covering
+          multi-clip selection, thumbnail rendering, and session history will be
+          created and executed.
 \end{itemize}
 
-\subsection{Snapshot 4 -- Final}
-The final snapshot addressed polish, stability, and documentation. The following
-changes were made:
+\subsection{Snapshot 4 -- Final (Planned)}
+The final snapshot is expected to focus on polish, stability, and documentation.
+The following updates are planned:
 
 \begin{itemize}[noitemsep]
-    \item \textbf{Error handling improvements.} Graceful error pages were added
-          for unsupported file formats, processing failures, and timeout events.
-          All exceptions in the worker container are logged to a file mounted
-          via Docker volume.
-    \item \textbf{Processing time optimization.} Frame sampling was introduced
-          in the YOLO Detector: only every other frame is passed through the
-          model during the initial highlight-scoring pass, reducing total
-          processing time by approximately 40\% with minimal accuracy loss.
-    \item \textbf{UI refinement.} Bootstrap layout was updated for improved
-          mobile responsiveness. The upload form now displays file size
-          validation feedback before submission.
-    \item \textbf{Docker Compose finalized.} The \texttt{docker-compose.yml}
-          was updated with health checks for the \texttt{web} and \texttt{worker}
-          services and a restart policy of \texttt{unless-stopped}.
-    \item \textbf{Future Work.} The following features were identified but not
-          implemented within the project timeline:
+    \item \textbf{Error handling improvements (planned).} Graceful error pages will
+          be implemented for unsupported file formats, processing failures, and
+          timeout events. Exceptions in the worker container will be logged via a
+          Docker-mounted volume.
+    \item \textbf{Processing time optimization (planned).} Frame sampling may be
+          introduced in the YOLO Detector (e.g., processing every other frame)
+          to reduce total processing time while maintaining acceptable accuracy.
+    \item \textbf{UI refinement (planned).} The Bootstrap layout will be improved
+          for better mobile responsiveness, and the upload form will include file
+          size validation feedback before submission.
+    \item \textbf{Docker Compose finalization (planned).} The \texttt{docker-compose.yml}
+          file will include health checks for services and a restart policy such
+          as \texttt{unless-stopped}.
+    \item \textbf{Future Work.} The following features are identified as potential
+          future enhancements beyond the project scope:
           \begin{itemize}[noitemsep]
-              \item Cloud storage integration (AWS S3) for persistent clip hosting.
+              \item Cloud storage integration (e.g., AWS S3) for persistent clip hosting.
               \item Fine-tuned YOLOv8 model trained on a labeled basketball dataset
-                    for improved detection accuracy in low-light and crowded scenes.
+                    for improved detection accuracy.
               \item User authentication and per-user clip libraries.
               \item Real-time streaming input via RTMP for live game processing.
           \end{itemize}
