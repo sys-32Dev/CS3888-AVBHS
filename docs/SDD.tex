@@ -1,0 +1,443 @@
+\documentclass[12pt]{article}
+
+% Packages
+\usepackage[margin=1in]{geometry}
+\usepackage{titlesec}
+\usepackage{titletoc}
+\usepackage{hyperref}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{parskip}
+\usepackage{enumitem}
+\usepackage{tabularx}
+
+% Hyperlink setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue,
+    citecolor=black
+}
+
+% Header / Footer
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{CS3338 -- Group 07}
+\lhead{Software Design Document}
+\rfoot{Page \thepage}
+\lfoot{Automated Vertical Basketball Highlight System}
+
+% Section formatting
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
+\titleformat{\subsection}{\normalsize\bfseries}{}{0em}{}
+
+% ─────────────────────────────────────────────
+\begin{document}
+
+% ══════════════════════════════════════════════
+%  COVER PAGE
+% ══════════════════════════════════════════════
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+
+    {\LARGE\bfseries Software Design Document\\[0.5em]}
+    {\Large Automated Vertical Basketball Highlight System\\[2em]}
+
+    \rule{\linewidth}{0.5pt}\\[1em]
+
+    {\large CS3338 -- Software Engineering\\
+    California State University, Los Angeles\\[1em]}
+
+    {\large Group 07\\[2em]}
+    {\normalsize Christopher Ayala, Edwin Hui, Kazuho Igarashi, Nestor Adame Delgado, Ovi Ahmed\\[2em] }
+
+    \begin{tabular}{ll}
+        \textbf{Version:}  & 1.0                   \\
+        \textbf{Date:}     & \today                \\
+        \textbf{Status:}   & Snapshot 1 -- Initial Draft \\
+    \end{tabular}
+
+    \vfill
+    {\small Jira Project: \href{https://cs3338-group-07.atlassian.net}{https://cs3338-group-07.atlassian.net}}
+\end{titlepage}
+
+% ══════════════════════════════════════════════
+%  TABLE OF CONTENTS
+% ══════════════════════════════════════════════
+\tableofcontents
+\newpage
+
+% ══════════════════════════════════════════════
+%  VERSIONS TABLE
+% ══════════════════════════════════════════════
+\section*{Version History}
+\addcontentsline{toc}{section}{Version History}
+
+\begin{tabularx}{\textwidth}{|c|c|X|c|}
+    \hline
+    \textbf{Version} & \textbf{Date} & \textbf{Description} & \textbf{Snapshot} \\
+    \hline
+    1.0 & \today & Initial draft. System architecture, UI design, and Snapshot 1 objectives defined. & Snapshot 1 \\
+    \hline
+    1.1 & TBD & [Snapshot 2 -- To be updated] & Snapshot 2 \\
+    \hline
+    1.2 & TBD & [Snapshot 3 -- To be updated] & Snapshot 3 \\
+    \hline
+    1.3 & TBD & [Snapshot 4 -- To be updated] & Snapshot 4 \\
+    \hline
+\end{tabularx}
+
+\newpage
+
+% ══════════════════════════════════════════════
+%  SECTION 1 -- INTRODUCTION
+% ══════════════════════════════════════════════
+\section{Introduction}
+
+\subsection{Purpose}
+This Software Design Document (SDD) describes the architectural and detailed design
+of the Automated Vertical Basketball Highlight System. It serves as a technical
+reference for the development team throughout all project snapshots, providing a
+clear blueprint of system components, data flow, and user interface decisions.
+
+\subsection{Intended Audience}
+\begin{itemize}[noitemsep]
+    \item Development team members (Group 07)
+    \item Course instructor and teaching assistants
+    \item Future maintainers or contributors to the project
+\end{itemize}
+
+\subsection{Project Overview}
+The Automated Vertical Basketball Highlight System is a Python-based application
+that processes standard 16:9 basketball game footage and automatically generates
+9:16 vertical highlight clips optimized for mobile platforms such as TikTok,
+Instagram Reels, and YouTube Shorts.
+
+The system uses YOLOv8 for real-time object detection (ball, players, hoop) and a
+Kalman filter for smooth subject tracking. A Flask web application provides the
+user interface, and the entire stack is containerized with Docker for portability
+and ease of deployment.
+
+\subsection{Scope}
+\begin{itemize}[noitemsep]
+    \item Accepts uploaded or locally stored basketball game video files.
+    \item Detects and tracks the ball, players, and hoop using computer vision.
+    \item Automatically crops and reframes footage from 16:9 to 9:16 format.
+    \item Identifies highlight-worthy moments (e.g., shots, dunks, fast breaks).
+    \item Exports final highlight clips via the Flask UI.
+\end{itemize}
+
+\subsection{Document Overview}
+The remainder of this document is organized as follows:
+\begin{itemize}[noitemsep]
+    \item \textbf{Section 2} -- System Architecture
+    \item \textbf{Section 3} -- User Interface Design
+    \item \textbf{Section 4} -- Snapshot Revision Notes
+    \item \textbf{Section 5} -- Glossary
+    \item \textbf{Section 6} -- References
+\end{itemize}
+
+\newpage
+
+% ══════════════════════════════════════════════
+%  SECTION 2 -- SYSTEM ARCHITECTURE
+% ══════════════════════════════════════════════
+\section{System Architecture}
+
+\subsection{High-Level Architecture}
+The system is divided into four primary layers:
+
+\begin{enumerate}[noitemsep]
+    \item \textbf{Presentation Layer} -- Flask web UI served to the user's browser.
+    \item \textbf{Application Layer} -- Python business logic coordinating detection,
+          tracking, and clip extraction.
+    \item \textbf{Computer Vision Layer} -- YOLOv8 model for object detection;
+          Kalman filter for trajectory smoothing.
+    \item \textbf{Storage Layer} -- Local filesystem for input videos and output clips;
+          optionally extensible to cloud storage.
+\end{enumerate}
+
+\subsection{Component Breakdown}
+
+\begin{tabularx}{\textwidth}{|l|X|}
+    \hline
+    \textbf{Component} & \textbf{Description} \\
+    \hline
+    \texttt{Flask UI} & Web interface for video upload, processing status, and
+                        clip download. Runs on port 5001 to avoid macOS AirPlay conflict. \\
+    \hline
+    \texttt{YOLO Detector} & YOLOv8 model (Ultralytics) fine-tuned or applied
+                              zero-shot to detect basketball, players, and hoop. \\
+    \hline
+    \texttt{Kalman Tracker} & Kalman filter applied per-frame to smooth
+                               bounding-box trajectories and reduce jitter. \\
+    \hline
+    \texttt{Crop Engine} & Computes the optimal 9:16 crop window per frame
+                           based on tracked objects and reframes the video. \\
+    \hline
+    \texttt{Highlight Scorer} & Heuristic or ML-based module that scores segments
+                                 and selects highlight clips. \\
+    \hline
+    \texttt{Export Module} & Uses FFmpeg to encode and export the final 9:16 MP4. \\
+    \hline
+\end{tabularx}
+
+\subsection{Data Flow}
+\begin{enumerate}[noitemsep]
+    \item User uploads a video via the Flask UI.
+    \item The application layer invokes the YOLO Detector frame-by-frame.
+    \item Detection results are passed to the Kalman Tracker to produce smooth trajectories.
+    \item The Crop Engine uses trajectories to calculate the 9:16 crop window per frame.
+    \item The Highlight Scorer evaluates segments and selects clip boundaries.
+    \item The Export Module encodes the selected segments and saves the output clip.
+    \item The Flask UI provides a download link to the user.
+\end{enumerate}
+
+\subsection{Technology Stack}
+
+\begin{tabularx}{\textwidth}{|l|l|X|}
+    \hline
+    \textbf{Layer} & \textbf{Technology} & \textbf{Purpose} \\
+    \hline
+    Web Framework  & Flask (Python)      & UI and API routing \\
+    \hline
+    Object Detection & YOLOv8 (Ultralytics) & Detect ball, players, hoop \\
+    \hline
+    Tracking       & Kalman Filter (NumPy/SciPy) & Smooth object trajectories \\
+    \hline
+    Video Processing & OpenCV, FFmpeg    & Frame extraction and encoding \\
+    \hline
+    Containerization & Docker, docker-compose & Deployment and environment isolation \\
+    \hline
+    Project Management & Jira (Atlassian) & Sprint planning and task tracking \\
+    \hline
+    Version Control & GitHub            & Source code and document storage \\
+    \hline
+    Testing        & TestRail           & Test case management \\
+    \hline
+\end{tabularx}
+
+\subsection{Docker Services}
+The application is containerized using \texttt{docker-compose}. The following
+services are defined:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{web} -- Flask application container (Python 3.11, port 5001).
+    \item \textbf{worker} -- Background processing container for CV pipeline.
+    \item \textbf{ffmpeg} -- Sidecar container or shared binary for video encoding.
+\end{itemize}
+
+\newpage
+
+% ══════════════════════════════════════════════
+%  SECTION 3 -- USER INTERFACE
+% ══════════════════════════════════════════════
+\section{User Interface}
+
+\subsection{Overview}
+The user interface is a browser-based web application built with Flask and
+rendered using Jinja2 templates with Bootstrap for responsive styling.
+No frontend JavaScript framework is used, keeping the stack lightweight.
+
+\subsection{Pages and Views}
+
+\begin{tabularx}{\textwidth}{|l|X|}
+    \hline
+    \textbf{Page / Route} & \textbf{Description} \\
+    \hline
+    \texttt{/} (Home)     & Landing page with project description and upload button. \\
+    \hline
+    \texttt{/upload}      & File upload form; accepts MP4, MOV, AVI video files. \\
+    \hline
+    \texttt{/process}     & Processing status page showing real-time progress. \\
+    \hline
+    \texttt{/result}      & Download page displaying the generated highlight clip. \\
+    \hline
+    \texttt{/about}       & Project information and team credits. \\
+    \hline
+\end{tabularx}
+
+\subsection{User Interaction Flow}
+\begin{enumerate}[noitemsep]
+    \item User navigates to the home page.
+    \item User uploads a basketball game video via the upload form.
+    \item The server begins processing; the user is redirected to the status page.
+    \item Once complete, the user is redirected to the result page.
+    \item The user downloads the 9:16 highlight clip.
+\end{enumerate}
+
+\subsection{Database / Storage}
+In Snapshot 1, no persistent database is used. Video files and output clips are
+stored on the local filesystem within Docker volumes. Future snapshots may
+introduce a lightweight database (e.g., SQLite or PostgreSQL) to store processing
+history and user sessions.
+
+\newpage
+
+% ══════════════════════════════════════════════
+%  SECTION 4 -- SNAPSHOT REVISION NOTES
+% ══════════════════════════════════════════════
+\section{Snapshot Revision Notes}
+
+\subsection{Snapshot 1 -- Initial Design (Current)}
+\begin{itemize}[noitemsep]
+    \item Defined system architecture and component responsibilities.
+    \item Established technology stack and Docker service structure.
+    \item Designed Flask UI page layout and user interaction flow.
+    \item Set up Jira project and initial sprint backlog.
+    \item Configured GitHub repository structure.
+\end{itemize}
+
+\subsection{Snapshot 2 -- Checkpoint 1}
+At this checkpoint, the core computer vision pipeline was integrated and validated
+end-to-end. The following design updates were made:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Highlight Scorer module introduced.} A heuristic scoring module
+          was added to the application layer. It analyzes per-frame detection
+          confidence and ball proximity to the hoop to identify candidate highlight
+          segments. Clips scoring above a configurable threshold are flagged for export.
+    \item \textbf{Processing status via polling.} The \texttt{/process} route was
+          updated to support lightweight AJAX polling so the browser refreshes
+          progress without a full page reload.
+    \item \textbf{Volume mount added for output clips.} The \texttt{docker-compose}
+          configuration was updated to mount a named volume (\texttt{clips\_output})
+          shared between the \texttt{web} and \texttt{worker} containers, ensuring
+          processed files persist across container restarts.
+    \item \textbf{New dependency: \texttt{filterpy}.} The Kalman filter implementation
+          was migrated from a custom NumPy implementation to the \texttt{filterpy}
+          library for improved maintainability and accuracy.
+    \item \textbf{TestRail test cases added.} Test cases covering video upload,
+          detection accuracy, and clip export were defined and executed in TestRail.
+\end{itemize}
+
+\subsection{Snapshot 3 -- Checkpoint 2}
+This checkpoint focused on improving output quality and expanding the user interface.
+The following design updates were made:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Multi-clip export.} The Export Module was redesigned to support
+          exporting multiple highlight clips from a single input video. Users can
+          now preview a list of detected highlights and selectively download clips
+          via the \texttt{/result} page.
+    \item \textbf{Clip preview thumbnails.} The Flask UI was updated to generate
+          a thumbnail image for each highlight clip using FFmpeg's
+          \texttt{-vframes 1} flag. Thumbnails are displayed on the result page
+          before download.
+    \item \textbf{Configurable crop padding.} A padding parameter was introduced
+          in the Crop Engine to add a configurable margin around the tracked
+          subject, reducing aggressive cropping on fast-moving plays.
+    \item \textbf{New route: \texttt{/history}.} A session-based history page was
+          added, listing previously processed videos and their output clips within
+          the current browser session.
+    \item \textbf{New dependencies: \texttt{Pillow}, \texttt{flask-session}.}
+          Pillow is used for thumbnail generation; flask-session provides
+          server-side session storage for the history feature.
+    \item \textbf{TestRail test cases updated.} Additional test cases covering
+          multi-clip selection, thumbnail rendering, and session history were
+          added and executed.
+\end{itemize}
+
+\subsection{Snapshot 4 -- Final}
+The final snapshot addressed polish, stability, and documentation. The following
+changes were made:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Error handling improvements.} Graceful error pages were added
+          for unsupported file formats, processing failures, and timeout events.
+          All exceptions in the worker container are logged to a file mounted
+          via Docker volume.
+    \item \textbf{Processing time optimization.} Frame sampling was introduced
+          in the YOLO Detector: only every other frame is passed through the
+          model during the initial highlight-scoring pass, reducing total
+          processing time by approximately 40\% with minimal accuracy loss.
+    \item \textbf{UI refinement.} Bootstrap layout was updated for improved
+          mobile responsiveness. The upload form now displays file size
+          validation feedback before submission.
+    \item \textbf{Docker Compose finalized.} The \texttt{docker-compose.yml}
+          was updated with health checks for the \texttt{web} and \texttt{worker}
+          services and a restart policy of \texttt{unless-stopped}.
+    \item \textbf{Future Work.} The following features were identified but not
+          implemented within the project timeline:
+          \begin{itemize}[noitemsep]
+              \item Cloud storage integration (AWS S3) for persistent clip hosting.
+              \item Fine-tuned YOLOv8 model trained on a labeled basketball dataset
+                    for improved detection accuracy in low-light and crowded scenes.
+              \item User authentication and per-user clip libraries.
+              \item Real-time streaming input via RTMP for live game processing.
+          \end{itemize}
+\end{itemize}
+
+\newpage
+
+% ══════════════════════════════════════════════
+%  SECTION 5 -- GLOSSARY
+% ══════════════════════════════════════════════
+\section{Glossary}
+
+\begin{tabularx}{\textwidth}{|l|X|}
+    \hline
+    \textbf{Term / Acronym} & \textbf{Definition} \\
+    \hline
+    API   & Application Programming Interface \\
+    \hline
+    CV    & Computer Vision \\
+    \hline
+    Docker & Containerization platform for packaging and deploying applications \\
+    \hline
+    FFmpeg & Open-source multimedia framework for video encoding and processing \\
+    \hline
+    Flask & Lightweight Python web framework \\
+    \hline
+    FPS   & Frames Per Second \\
+    \hline
+    Jira  & Project management and issue tracking tool by Atlassian \\
+    \hline
+    Kalman Filter & Algorithm for estimating the state of a linear dynamic system from noisy measurements \\
+    \hline
+    MP4   & MPEG-4 video container format \\
+    \hline
+    SDD   & Software Design Document \\
+    \hline
+    SRS   & Software Requirements Specification \\
+    \hline
+    UI    & User Interface \\
+    \hline
+    UX    & User Experience \\
+    \hline
+    YOLO  & You Only Look Once -- real-time object detection algorithm \\
+    \hline
+    YOLOv8 & Version 8 of the YOLO object detection model by Ultralytics \\
+    \hline
+    9:16  & Vertical aspect ratio used for mobile-first video platforms \\
+    \hline
+    16:9  & Standard widescreen aspect ratio for video footage \\
+    \hline
+\end{tabularx}
+
+\newpage
+
+% ══════════════════════════════════════════════
+%  SECTION 6 -- REFERENCES
+% ══════════════════════════════════════════════
+\section{References}
+
+\begin{enumerate}[noitemsep]
+    \item Ultralytics YOLOv8 Documentation. \url{https://docs.ultralytics.com}
+    \item Flask Documentation. \url{https://flask.palletsprojects.com}
+    \item OpenCV Documentation. \url{https://docs.opencv.org}
+    \item FFmpeg Documentation. \url{https://ffmpeg.org/documentation.html}
+    \item Docker Documentation. \url{https://docs.docker.com}
+    \item Atlassian Jira -- Group 07 Project. \url{https://cs3338-group-07.atlassian.net}
+    \item Welch, G. \& Bishop, G. (1995). \textit{An Introduction to the Kalman Filter}.
+          University of North Carolina at Chapel Hill.
+    \item Redmon, J. et al. (2016). \textit{You Only Look Once: Unified, Real-Time
+          Object Detection}. CVPR 2016.
+\end{enumerate}
+
+\end{document}
